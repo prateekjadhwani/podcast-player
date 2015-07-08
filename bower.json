@@ -1,0 +1,28 @@
+{
+  "name": "podcast-player",
+  "version": "0.0.1",
+  "authors": [
+    "Prateek Jadhwani <prateekjadhwani@users.noreply.github.com>"
+  ],
+  "description": "A polymer element for playing poddcast mp3s",
+  "main": "demo.html",
+  "keywords": [
+    "podcast",
+    "player",
+    "polymer",
+    "element"
+  ],
+  "license": "MIT",
+  "homepage": "http://www.prateekjadhwani.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "paper-elements": "PolymerElements/paper-elements#~1.0.1",
+    "iron-elements": "PolymerElements/iron-elements#~1.0.1"
+  }
+}
