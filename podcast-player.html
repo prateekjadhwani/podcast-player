@@ -47,6 +47,16 @@
 				},
 				wavesurfer: {
 					type: Object
+				},
+				wavecolor: {
+					type: String,
+					value: '#ffffff',
+					notify: true
+				},
+				progresscolor: {
+					type: String,
+					value: '#CFD8DC',
+					notify: true
 				}
 			},
 			initWaveSurfer: function() {
@@ -55,8 +65,8 @@
 					container: this.$.container,
 //					progressColor: '#f16529',
 //					waveColor: '#e44d26',
-					waveColor: '#ffffff',
-					progressColor: '#CFD8DC', // --primary-background-color
+					waveColor: this.wavecolor,
+					progressColor: this.progresscolor, // --primary-background-color
 					fillParent: true,
 					height: 100
 				});
