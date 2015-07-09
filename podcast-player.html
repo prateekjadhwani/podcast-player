@@ -1,8 +1,12 @@
-<link rel="import" href="bower_components/paper-material/paper-material.html" />
-<link rel="import" href="bower_components/paper-fab/paper-fab.html" />
-<link rel="import" href="bower_components/iron-icons/iron-icons.html" />
-<link rel="import" href="bower_components/iron-icons/av-icons.html" />
-<link rel="import" href="bower_components/paper-progress/paper-progress.html" />
+<link rel="import" href="../paper-material/paper-material.html" />
+<link rel="import" href="../paper-fab/paper-fab.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-icons/av-icons.html" />
+<link rel="import" href="../paper-progress/paper-progress.html" />
+<link rel="import" href="../neon-animation/neon-animated-pages.html">
+<link rel="import" href="../neon-animation/neon-animations.html">
+<link rel="import" href="control-fab.html" />
+<link rel="import" href="control-box.html" />
 
 <dom-module id="podcast-player">
 	<style>
@@ -12,19 +16,24 @@
 			background-color: var(--dark-primary-color);
 			position: relative;
 		}
-		paper-fab {
-			position: absolute;
-			top: -25px;
-			left: 25px;
-			z-index: 25;
+		.controls {
+			height: 50px;
 		}
 		paper-material {
 			opacity: 1;
 		}
+		.waveContainer {
+			transition: all 1s ease;
+			top: -50px;
+			background-color: var(--dark-primary-color);
+		}
 	</style>
 	<template>
-		<paper-fab id="playbutton" disabled icon="av:play-arrow" on-click="togglePlay"></paper-fab>
-		<paper-material id="container" elevation="0">
+		<neon-animated-pages class="controls" selected="0">
+			<control-fab on-click="togglePlay"></control-fab>
+			<control-box></control-box>
+		</neon-animated-pages>
+		<paper-material id="container" class="waveContainer" elevation="0">
 		</paper-material>
 		
 		<script type="text/javascript" src="wavesurfer.min.js" onload='document.querySelector("podcast-player").updateWavesurfer();'></script>
@@ -71,7 +80,7 @@
 					height: 100
 				});
 				this.wavesurfer.on('ready', function () {
-					self.$.playbutton.removeAttribute('disabled');
+					document.querySelector('#playbutton').removeAttribute('disabled');
 				});
 				this.wavesurfer.load(this.src);
 			},
@@ -80,12 +89,13 @@
 				this.initWaveSurfer();
 			},
 			togglePlay: function(e) {
+			var waveStyle = Polymer.dom(this.root).querySelector('.waveContainer');
 				this.wavesurfer.playPause();
-				var iconType = this.$.playbutton.getAttribute('icon');
+				var iconType = document.querySelector('#playbutton').getAttribute('icon');
 				if(iconType === 'av:play-arrow') {
-					this.$.playbutton.setAttribute('icon', 'av:pause');
+					waveStyle.style.top = "-50px";
 				} else {
-					this.$.playbutton.setAttribute('icon', 'av:play-arrow');
+					waveStyle.style.top = "0px";
 				}
 			}
 		});
