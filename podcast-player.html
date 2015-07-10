@@ -3,11 +3,6 @@
 <link rel="import" href="../paper-icon-button/paper-icon-button.html" />
 <link rel="import" href="../iron-icons/iron-icons.html" />
 <link rel="import" href="../iron-icons/av-icons.html" />
-<link rel="import" href="../paper-progress/paper-progress.html" />
-<link rel="import" href="../neon-animation/neon-animated-pages.html">
-<link rel="import" href="../neon-animation/neon-animations.html">
-<link rel="import" href="control-box.html" />
-
 <dom-module id="podcast-player">
 	<style>
 		:host {
@@ -17,7 +12,7 @@
 			position: relative;
 		}
 		.controls {
-			transition: all 1s ease;
+			transition: all .5s ease;
 			position: absolute;
 			height: 50px;
 			width: 100%;
@@ -28,7 +23,7 @@
 			z-index: 20;
 		}
 		paper-fab {
-			transition: all 1s ease;
+			transition: all .5s ease;
 			top: -25px;
 			left: 25px;
 			z-index: 25;
@@ -36,7 +31,7 @@
 			position: absolute;
 		}
 		.waveContainer {
-			transition: all 1s ease;
+			transition: all .5s ease;
 			background-color: var(--dark-primary-color);
 			top: 25px;
 			transform: scaleY(1.5);
@@ -81,8 +76,8 @@
 		
 		<paper-material  class="controls hidden" elevation="2">
 		<paper-icon-button class="centred middle" style="color: white;" icon="av:pause" on-click="togglePlay"></paper-icon-button>
-		<paper-icon-button class="centred left" style="color: white;" icon="av:replay-30"></paper-icon-button>
-		<paper-icon-button class="centred right" style="color: white;" icon="av:volume-off"></paper-icon-button>
+		<paper-icon-button class="centred left" style="color: white;" icon="av:replay-30" on-click="throwBack"></paper-icon-button>
+		<paper-icon-button id="mute" class="centred right" style="color: white;" icon="av:volume-up" on-click="toggleMute"></paper-icon-button>
 		</paper-material>
 
 		<paper-material id="container" class="waveContainer" elevation="0">
@@ -155,9 +150,9 @@
 				this.initWaveSurfer();
 			},
 			togglePlay: function(e) {
-			var waveStyle = Polymer.dom(this.root).querySelector('.waveContainer');
-			var buttonStyle = Polymer.dom(this.root).querySelector('#playbutton');
-			var controlsStyle = Polymer.dom(this.root).querySelector('.controls');
+				var waveStyle = Polymer.dom(this.root).querySelector('.waveContainer');
+				var buttonStyle = Polymer.dom(this.root).querySelector('#playbutton');
+				var controlsStyle = Polymer.dom(this.root).querySelector('.controls');
 				this.wavesurfer.playPause();
 				var iconType = this.$.playbutton.getAttribute('icon');
 				if(iconType === 'av:play-arrow') {
@@ -168,7 +163,7 @@
 					setTimeout(function() {
 						controlsStyle.classList.remove("hidden");
 						buttonStyle.classList.add("hidden");
-					},1000);
+					},500);
 				} else {
 					controlsStyle.classList.add("hidden");
 					buttonStyle.classList.remove("hidden");
@@ -179,6 +174,19 @@
 						waveStyle.classList.remove("waveActive");
 					},1);
 				}
+			},
+			toggleMute: function(e) {
+				var muteStyle = Polymer.dom(this.root).querySelector('#mute');
+				var iconType = muteStyle.getAttribute('icon');
+				this.wavesurfer.toggleMute();
+				if(iconType === 'av:volume-up') {
+					muteStyle.setAttribute('icon', 'av:volume-off');
+				} else {
+					muteStyle.setAttribute('icon', 'av:volume-up');
+				};
+			},
+			throwBack: function(e) {
+				this.wavesurfer.skipBackward(30);
 			}
 		});
 	})();
