@@ -24,8 +24,9 @@
 		}
 		.waveContainer {
 			transition: all 1s ease;
-			top: -50px;
+			top: -25px;
 			background-color: var(--dark-primary-color);
+			transform: scaleY(1.5);
 		}
 	</style>
 	<template>
@@ -93,9 +94,11 @@
 				this.wavesurfer.playPause();
 				var iconType = document.querySelector('#playbutton').getAttribute('icon');
 				if(iconType === 'av:play-arrow') {
-					waveStyle.style.top = "-50px";
+					waveStyle.style.top = "-25px";
+					waveStyle.style.transform = "scaleY(1.5)";
 				} else {
 					waveStyle.style.top = "0px";
+					waveStyle.style.transform = "scaleY(1)";
 				}
 			}
 		});
