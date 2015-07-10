@@ -4,23 +4,34 @@
 		<link rel="import" href="podcast-player.html" />
 		<link rel="import" href="app-theme.html" />
 		<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=no">
+		<link rel="import" href="../paper-material/paper-material.html" />
 		<style>
 			/* resets */
 			html, body {
 				margin: 0;
 				padding: 0;
+				background: #ccc;
 			}
-
+			.container {
+				position: fixed;
+				top: calc(50% - 75px);
+				left: calc(50% - 225px);
+				width: 450px;
+				height: 150px;
+			}
 			/* position and size of player */
 			podcast-player {
 				position: fixed;
-				bottom: 0px;
-				width: 100%;
+				top: calc(50% - 75px);
+				left: calc(50% - 225px);
+				width: 450px;
 			}
 		</style>
 	</head>
 	<body>
 		<!-- Sorry, I cant commit mirror.mp3 due to copyright issues -->
-		<podcast-player wavecolor="#e44d26" progresscolor="#f16529" src="mirror.mp3"></podcast-player>
+		<paper-material class="container" elevation="2">
+			<podcast-player wavecolor="#e44d26" progresscolor="#f16529" src="mirror.mp3"></podcast-player>
+		</paper-material>
 	</body>
 </html>
