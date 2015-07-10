@@ -43,6 +43,7 @@
 		}
 		.circleAnimation {
 			border-radius: 50%;
+			overflow: hidden;
 		}
 		.playActive {
 			position: absolute;
@@ -55,6 +56,21 @@
 			top: 50px;
 			transform: scaleY(1);
 		}
+		paper-icon-button {
+			position: absolute;
+		}
+		.centred {
+			top: calc(50% - 20px);
+		}
+		.middle {
+			left: calc(50% - 20px);
+		}
+		.left {
+			left: calc(50% - 20px - 25%);
+		}
+		.right {
+			left: calc(50% - 20px + 25%);
+		}
 		.hidden {
 			display: none;
 		}
@@ -64,8 +80,9 @@
 		<paper-fab id="playbutton" class="controlp circleAnimation" disabled icon="av:play-arrow" on-click="togglePlay"></paper-fab>
 		
 		<paper-material  class="controls hidden" elevation="2">
-		<paper-icon-button style="color: white;" icon="av:pause" on-click="togglePlay"></paper-icon-button>
-		I'm the bar that's being animated to!
+		<paper-icon-button class="centred middle" style="color: white;" icon="av:pause" on-click="togglePlay"></paper-icon-button>
+		<paper-icon-button class="centred left" style="color: white;" icon="av:replay-30"></paper-icon-button>
+		<paper-icon-button class="centred right" style="color: white;" icon="av:volume-off"></paper-icon-button>
 		</paper-material>
 
 		<paper-material id="container" class="waveContainer" elevation="0">
@@ -160,7 +177,6 @@
 						buttonStyle.classList.add("circleAnimation");
 						buttonStyle.classList.remove("playActive");
 						waveStyle.classList.remove("waveActive");
-						buttonStyle.querySelector('paper-material').classList.add("hidden");
 					},1);
 				}
 			}
