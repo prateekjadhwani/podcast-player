@@ -12,7 +12,6 @@
 			position: relative;
 		}
 		.controls {
-			transition: all .5s ease;
 			position: absolute;
 			height: 50px;
 			width: 100%;
@@ -56,15 +55,21 @@
 		}
 		.centred {
 			top: calc(50% - 20px);
+			left: calc(50% - 20px);
+			transform: scale(0);
+			transition: all .3s ease;
 		}
 		.middle {
 			left: calc(50% - 20px);
+			transform: scale(1);
 		}
 		.left {
-			left: calc(50% - 20px - 25%);
+			left: calc(25% - 20px);
+			transform: scale(1);
 		}
 		.right {
-			left: calc(50% - 20px + 25%);
+			left: calc(75% - 20px);
+			transform: scale(1);
 		}
 		.hidden {
 			display: none;
@@ -76,8 +81,8 @@
 		
 		<paper-material  class="controls hidden" elevation="2">
 		<paper-icon-button class="centred middle" style="color: white;" icon="av:pause" on-click="togglePlay"></paper-icon-button>
-		<paper-icon-button class="centred left" style="color: white;" icon="av:replay-30" on-click="throwBack"></paper-icon-button>
-		<paper-icon-button id="mute" class="centred right" style="color: white;" icon="av:volume-up" on-click="toggleMute"></paper-icon-button>
+		<paper-icon-button id="replay" class="centred" style="color: white;" icon="av:replay-30" on-click="throwBack"></paper-icon-button>
+		<paper-icon-button id="mute" class="centred" style="color: white;" icon="av:volume-up" on-click="toggleMute"></paper-icon-button>
 		</paper-material>
 
 		<paper-material id="container" class="waveContainer" elevation="0">
@@ -115,11 +120,46 @@
 					notify: true
 				}
 			},
-			initWaveSurfer: function() {
-				var self = this;
+			activateAnimation: function() {
 				var waveStyle = Polymer.dom(this.root).querySelector('.waveContainer');
 				var buttonStyle = Polymer.dom(this.root).querySelector('#playbutton');
 				var controlsStyle = Polymer.dom(this.root).querySelector('.controls');
+				var muteStyle = Polymer.dom(this.root).querySelector('#mute');
+				var replayStyle = Polymer.dom(this.root).querySelector('#replay');
+				buttonStyle.setAttribute('icon', 'av:pause');
+				buttonStyle.classList.remove("circleAnimation");
+				buttonStyle.classList.add("playActive");
+				waveStyle.classList.add("waveActive");
+				setTimeout(function() {
+					controlsStyle.classList.remove("hidden");
+					buttonStyle.classList.add("hidden");
+				},500);
+				setTimeout (function() {
+					muteStyle.classList.add("right");
+					replayStyle.classList.add("left");
+				},600);
+			},
+			deactivateAnimation: function() {
+				var waveStyle = Polymer.dom(this.root).querySelector('.waveContainer');
+				var buttonStyle = Polymer.dom(this.root).querySelector('#playbutton');
+				var controlsStyle = Polymer.dom(this.root).querySelector('.controls');
+				var muteStyle = Polymer.dom(this.root).querySelector('#mute');
+				var replayStyle = Polymer.dom(this.root).querySelector('#replay');
+				muteStyle.classList.remove("right");
+				replayStyle.classList.remove("left");
+				setTimeout(function() {
+					controlsStyle.classList.add("hidden");
+					buttonStyle.classList.remove("hidden");
+				},100);
+				setTimeout(function() {
+					buttonStyle.setAttribute('icon', 'av:play-arrow');
+					buttonStyle.classList.add("circleAnimation");
+					buttonStyle.classList.remove("playActive");
+					waveStyle.classList.remove("waveActive");
+				},200);
+			},
+			initWaveSurfer: function() {
+				var self = this;
 				this.wavesurfer.init({
 					container: this.$.container,
 //					progressColor: '#f16529',
@@ -132,16 +172,8 @@
 				this.wavesurfer.on('ready', function () {
 					document.querySelector('#playbutton').removeAttribute('disabled');
 				});
-				this.wavesurfer.on('finish', function () {
-					controlsStyle.classList.add("hidden");
-					buttonStyle.classList.remove("hidden");
-					setTimeout(function() {
-						buttonStyle.setAttribute('icon', 'av:play-arrow');
-						buttonStyle.classList.add("circleAnimation");
-						buttonStyle.classList.remove("playActive");
-						waveStyle.classList.remove("waveActive");
-						buttonStyle.querySelector('paper-material').classList.add("hidden");
-					},1);
+				this.wavesurfer.on('finish', function() {
+					self.deactivateAnimation();
 				});
 				this.wavesurfer.load(this.src);
 			},
@@ -150,29 +182,12 @@
 				this.initWaveSurfer();
 			},
 			togglePlay: function(e) {
-				var waveStyle = Polymer.dom(this.root).querySelector('.waveContainer');
-				var buttonStyle = Polymer.dom(this.root).querySelector('#playbutton');
-				var controlsStyle = Polymer.dom(this.root).querySelector('.controls');
 				this.wavesurfer.playPause();
 				var iconType = this.$.playbutton.getAttribute('icon');
 				if(iconType === 'av:play-arrow') {
-					buttonStyle.setAttribute('icon', 'av:pause');
-					buttonStyle.classList.remove("circleAnimation");
-					buttonStyle.classList.add("playActive");
-					waveStyle.classList.add("waveActive");
-					setTimeout(function() {
-						controlsStyle.classList.remove("hidden");
-						buttonStyle.classList.add("hidden");
-					},500);
+					this.activateAnimation();
 				} else {
-					controlsStyle.classList.add("hidden");
-					buttonStyle.classList.remove("hidden");
-					setTimeout(function() {
-						buttonStyle.setAttribute('icon', 'av:play-arrow');
-						buttonStyle.classList.add("circleAnimation");
-						buttonStyle.classList.remove("playActive");
-						waveStyle.classList.remove("waveActive");
-					},1);
+					this.deactivateAnimation();
 				}
 			},
 			toggleMute: function(e) {
