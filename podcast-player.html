@@ -105,6 +105,9 @@
 			},
 			initWaveSurfer: function() {
 				var self = this;
+				var waveStyle = Polymer.dom(this.root).querySelector('.waveContainer');
+				var buttonStyle = Polymer.dom(this.root).querySelector('#playbutton');
+				var controlsStyle = Polymer.dom(this.root).querySelector('.controls');
 				this.wavesurfer.init({
 					container: this.$.container,
 //					progressColor: '#f16529',
@@ -116,6 +119,17 @@
 				});
 				this.wavesurfer.on('ready', function () {
 					document.querySelector('#playbutton').removeAttribute('disabled');
+				});
+				this.wavesurfer.on('finish', function () {
+					controlsStyle.classList.add("hidden");
+					buttonStyle.classList.remove("hidden");
+					setTimeout(function() {
+						buttonStyle.setAttribute('icon', 'av:play-arrow');
+						buttonStyle.classList.add("circleAnimation");
+						buttonStyle.classList.remove("playActive");
+						waveStyle.classList.remove("waveActive");
+						buttonStyle.querySelector('paper-material').classList.add("hidden");
+					},1);
 				});
 				this.wavesurfer.load(this.src);
 			},
