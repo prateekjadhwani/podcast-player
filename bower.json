@@ -2,7 +2,8 @@
   "name": "podcast-player",
   "version": "0.0.1",
   "authors": [
-    "Prateek Jadhwani <prateekjadhwani@users.noreply.github.com>"
+    "Prateek Jadhwani <prateekjadhwani@users.noreply.github.com>",
+		"Andrew Bone <AndrewB05@gmail.com>"
   ],
   "description": "A polymer element for playing poddcast mp3s",
   "main": "demo.html",
