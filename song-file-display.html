@@ -4,6 +4,8 @@
 <link rel="import" href="bower_components/iron-icons/av-icons.html" />
 <link rel="import" href="bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 <link rel="import" href="bower_components/neon-animation/animations/hero-animation.html" >
+<link rel="import" href="bower_components/neon-animation/animations/ripple-animation.html" />
+<link rel="import" href="bower_components/neon-animation/animations/scale-down-animation.html" />
 
 <dom-module id="song-file-display">
 	<style>
@@ -11,6 +13,7 @@
 			width: 100%;
 			height: 100%;
 			position: relative;
+			overflow: hidden;
 		}
 		paper-fab {
 			position: absolute;
@@ -23,11 +26,12 @@
 			opacity: 1;
 			height: 100px !important;
 			width: 	100%;
+			overflow: hidden;
 		}
 	</style>
 	<template>
 		<paper-fab id="playbutton" icon="av:play-arrow" on-click="togglePlay"></paper-fab>
-		<paper-material elevation="0">
+		<paper-material id="c" elevation="0">
 		</paper-material>
 	</template>
 </dom-module>
@@ -49,9 +53,15 @@
 								toPage: this
 							}],
 							'exit': [{
-								name: 'hero-animation',
-								id: 'hero',
+								name: 'ripple-animation',
+								id: 'ripple',
 								fromPage: this
+							},{
+								name: 'scale-down-animation',
+  							node: this.$.playbutton,
+								timing: {
+									delay: 500
+								}
 							}]
 						};
 					}
@@ -59,7 +69,8 @@
 				sharedElements: {
 					value: function() {
 						return {
-							'hero': this.$.playbutton
+							'hero': this.$.playbutton,
+							'ripple': this.$.playbutton
 						}
 					}
 				}

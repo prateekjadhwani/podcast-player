@@ -7,6 +7,8 @@
 <link rel="import" href="bower_components/neon-animation/animations/hero-animation.html" >
 <link rel="import" href="bower_components/neon-animation/animations/slide-left-animation.html" />
 <link rel="import" href="bower_components/neon-animation/neon-animated-pages.html" />
+<link rel="import" href="bower_components/neon-animation/animations/ripple-animation.html" />
+<link rel="import" href="bower_components/neon-animation/animations/reverse-ripple-animation.html" />
 
 <dom-module id="song-file-player">
 	<style>
@@ -58,7 +60,8 @@
 				sharedElements: {
 					value: function() {
 						return {
-							'hero': this.$.container
+							'hero': this.$.container,
+							'ripple': this.$.container,
 						}
 					}
 				},
@@ -66,10 +69,9 @@
 					value: function() {
 						return {
 							'entry': [{
-								name: 'hero-animation',
-								id: 'hero',
-								toPage: this,
-								timing: {duration : 1000}
+								name: 'ripple-animation',
+								id: 'ripple',
+              	toPage: this,
 							}],
 							'exit': [{
 								name: 'hero-animation',
