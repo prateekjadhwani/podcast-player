@@ -20,12 +20,11 @@
 		}
 	</style>
 	<template>
-		
 		<neon-animated-pages id="pages" selected="0">
 			<song-file-display on-play-click="goToPlayer"></song-file-display>
-			<song-file-player on-pause-click="goToDisplay"></song-file-player>
+			<song-file-player on-pause-click="goToDisplay" src="{{src}}"></song-file-player>
 		</neon-animated-pages>
-<!--		<script type="text/javascript" src="wavesurfer.min.js" onload='document.querySelector("podcast-player").updateWavesurfer();'></script>-->
+		<script type="text/javascript" src="wavesurfer.min.js" onload='document.querySelector("song-file-player").updateWavesurfer();'></script>
 	</template>
 </dom-module>
 <script>
@@ -59,28 +58,14 @@
 				selectedPage :{
 					type: Number,
 					value: 0
-				}
+				},
+				initPlayer: false
 			},
-//			initWaveSurfer: function() {
-//				var self = this;
-//				this.wavesurfer.init({
-//					container: this.$.container,
-////					progressColor: '#f16529',
-////					waveColor: '#e44d26',
-//					waveColor: this.wavecolor,
-//					progressColor: this.progresscolor, // --primary-background-color
-//					fillParent: true,
-//					height: 100
-//				});
-//				this.wavesurfer.on('ready', function () {
-//					self.$.playbutton.removeAttribute('disabled');
-//				});
-//				this.wavesurfer.load(this.src);
-//			},
-//			updateWavesurfer: function() {
-//				this.wavesurfer = Object.create(WaveSurfer);
-//				this.initWaveSurfer();
-//			},
+			listeners: {
+				// this event is fired when the animation finishes
+				'neon-animation-finish': '_onNeonAnimationFinish'
+			},
+//			
 //			togglePlay: function(e) {
 //				this.selectedPage = 1;
 //				this.wavesurfer.play();
@@ -93,10 +78,19 @@
 //			},
 			goToPlayer : function(event) {
         this.$.pages.selected = 1;
+				if(this.initPlayer) {
+					document.querySelector("song-file-player").play();
+				} else {
+					document.querySelector("song-file-player").initWaveSurfer();
+					this.initPlayer = true;
+				}
       },
       goToDisplay : function(event) {
         this.$.pages.selected = 0;
-      }
+      },
+			_onNeonAnimationFinish: function() {
+				console.log('animation done!');
+  		}
 		});
 	})();
 </script>

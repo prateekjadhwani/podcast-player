@@ -1,9 +1,12 @@
 <link rel="import" href="bower_components/paper-material/paper-material.html" />
 <link rel="import" href="bower_components/paper-fab/paper-fab.html" />
+<link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html" />
 <link rel="import" href="bower_components/iron-icons/iron-icons.html" />
 <link rel="import" href="bower_components/iron-icons/av-icons.html" />
 <link rel="import" href="bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 <link rel="import" href="bower_components/neon-animation/animations/hero-animation.html" >
+<link rel="import" href="bower_components/neon-animation/animations/slide-left-animation.html" />
+<link rel="import" href="bower_components/neon-animation/neon-animated-pages.html" />
 
 <dom-module id="song-file-player">
 	<style>
@@ -11,14 +14,18 @@
 			width: 100%;
 			height: 100%;
 		}
-		paper-material {
+		paper-material#container {
 			height: 100%;
-			background: blue;
+			background: var(--accent-color);
 		}
 	</style>
 	<template>
-		<paper-material id="container123" elevation="0" on-click="togglePlay">
+		<paper-material id="container" elevation="0">
+			<paper-material id="wavecontainer" elevation="0">
+			</paper-material>
+			<paper-icon-button icon="av:pause" on-click="togglePlay"></paper-icon-button>
 		</paper-material>
+		
 	</template>
 </dom-module>
 <script>
@@ -29,10 +36,29 @@
 				Polymer.NeonSharedElementAnimatableBehavior
 			],
 			properties: {
+				src: {
+					type: String,
+					value: '',
+					notify: true
+				},
+				wavesurfer: {
+					type: Object,
+					value: null
+				},
+				wavecolor: {
+					type: String,
+					value: '#ffffff',
+					notify: true
+				},
+				progresscolor: {
+					type: String,
+					value: '#CFD8DC',
+					notify: true
+				},
 				sharedElements: {
 					value: function() {
 						return {
-							'hero': this.$.container123
+							'hero': this.$.container
 						}
 					}
 				},
@@ -42,7 +68,8 @@
 							'entry': [{
 								name: 'hero-animation',
 								id: 'hero',
-								toPage: this
+								toPage: this,
+								timing: {duration : 1000}
 							}],
 							'exit': [{
 								name: 'hero-animation',
@@ -54,7 +81,28 @@
 				}
 			},
 			togglePlay: function() {
+				this.wavesurfer.pause();
 				this.fire('pause-click');
+			},
+			initWaveSurfer: function() {
+				var self = this;
+				this.wavesurfer.init({
+					container: this.$.wavecontainer,
+					waveColor: this.wavecolor,
+					progressColor: this.progresscolor, // --primary-background-color
+					fillParent: true,
+					height: 100
+				});
+				this.wavesurfer.on('ready', function () {
+					self.wavesurfer.play();
+				});
+				this.wavesurfer.load(this.src);
+			},
+			updateWavesurfer: function() {
+				this.wavesurfer = Object.create(WaveSurfer);
+			},
+			play: function() {
+				this.wavesurfer.play();
 			}
 		});
 	})();
