@@ -14,7 +14,7 @@
     "element"
   ],
   "license": "MIT",
-  "homepage": "http://www.prateekjadhwani.com",
+  "homepage": "https://github.com/prateekjadhwani/podcast-player",
   "ignore": [
     "**/.*",
     "node_modules",
