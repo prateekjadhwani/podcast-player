@@ -4,11 +4,8 @@
 <link rel="import" href="bower_components/iron-icons/iron-icons.html" />
 <link rel="import" href="bower_components/iron-icons/av-icons.html" />
 <link rel="import" href="bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
-<link rel="import" href="bower_components/neon-animation/animations/hero-animation.html" >
-<link rel="import" href="bower_components/neon-animation/animations/slide-left-animation.html" />
 <link rel="import" href="bower_components/neon-animation/neon-animated-pages.html" />
-<link rel="import" href="bower_components/neon-animation/animations/ripple-animation.html" />
-<link rel="import" href="bower_components/neon-animation/animations/reverse-ripple-animation.html" />
+<link rel="import" href="bower_components/neon-animation/neon-animations.html" />
 
 <dom-module id="song-file-player">
 	<style>
@@ -20,12 +17,18 @@
 			height: 100%;
 			background: var(--accent-color);
 		}
+		paper-material#wavecontainer {
+			opacity: 0;
+			transition: opacity 0.5s;
+		}
 	</style>
 	<template>
 		<paper-material id="container" elevation="0">
 			<paper-material id="wavecontainer" elevation="0">
 			</paper-material>
-			<paper-icon-button icon="av:pause" on-click="togglePlay"></paper-icon-button>
+			<div id="controls">
+				<paper-icon-button id='pausebutton' icon="av:pause" on-click="togglePlay"></paper-icon-button>
+			</div>
 		</paper-material>
 		
 	</template>
@@ -62,6 +65,7 @@
 						return {
 							'hero': this.$.container,
 							'ripple': this.$.container,
+							'reverse-ripple' : this.$.pausebutton
 						}
 					}
 				},
@@ -72,17 +76,23 @@
 								name: 'ripple-animation',
 								id: 'ripple',
               	toPage: this,
+								timing: {
+									duration: 500
+								}
 							}],
 							'exit': [{
-								name: 'hero-animation',
-								id: 'hero',
-								fromPage: this
+								name: 'fade-out-animation',
+								node: this.$.container,
+								timing: {
+									duration: 1000
+								}
 							}]
 						}
 					}
 				}
 			},
 			togglePlay: function() {
+				this.$.wavecontainer.style.opacity = 0;
 				this.wavesurfer.pause();
 				this.fire('pause-click');
 			},

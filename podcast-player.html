@@ -81,12 +81,16 @@
 //			},
 			goToPlayer : function(event) {
         this.$.pages.selected = 1;
+				
 				if(this.initPlayer) {
 					document.querySelector("song-file-player").play();
 				} else {
 					document.querySelector("song-file-player").initWaveSurfer();
 					this.initPlayer = true;
 				}
+				setTimeout( function() {
+					document.querySelector("#wavecontainer").style.opacity = 1;
+				}, 1000);
       },
       goToDisplay : function(event) {
         this.$.pages.selected = 0;
