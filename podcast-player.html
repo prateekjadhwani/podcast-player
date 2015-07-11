@@ -24,8 +24,16 @@
 	</style>
 	<template>
 		<neon-animated-pages id="pages" selected="0">
-			<song-file-display on-play-click="goToPlayer"></song-file-display>
-			<song-file-player on-pause-click="goToDisplay" src="{{src}}"></song-file-player>
+			<song-file-display 
+												 on-play-click="goToPlayer"
+												 name="{{name}}"
+												 episode="{{episode}}"
+												 coverart="{{coverart}}"></song-file-display>
+			<song-file-player 
+												on-pause-click="goToDisplay" 
+												src="{{src}}"
+												wavecolor="{{wavecolor}}"
+												progresscolor="{{progresscolor}}"></song-file-player>
 		</neon-animated-pages>
 		<script type="text/javascript" src="wavesurfer.min.js" onload='document.querySelector("song-file-player").updateWavesurfer();'></script>
 	</template>
@@ -58,30 +66,24 @@
 					value: '#CFD8DC',
 					notify: true
 				},
+				coverart: {
+					type: String,
+					value: '',
+					notify: true
+				},
+				episode: {
+					type: String,
+					value: '',
+					notify: true
+				},
 				selectedPage :{
 					type: Number,
 					value: 0
 				},
 				initPlayer: false
 			},
-			listeners: {
-				// this event is fired when the animation finishes
-				'neon-animation-finish': '_onNeonAnimationFinish'
-			},
-//			
-//			togglePlay: function(e) {
-//				this.selectedPage = 1;
-//				this.wavesurfer.play();
-//				var iconType = this.$.playbutton.getAttribute('icon');
-//				if(iconType === 'av:play-arrow') {
-//					this.$.playbutton.setAttribute('icon', 'av:pause');
-//				} else {
-//					this.$.playbutton.setAttribute('icon', 'av:play-arrow');
-//				}
-//			},
 			goToPlayer : function(event) {
         this.$.pages.selected = 1;
-				
 				if(this.initPlayer) {
 					document.querySelector("song-file-player").play();
 				} else {
@@ -94,10 +96,7 @@
       },
       goToDisplay : function(event) {
         this.$.pages.selected = 0;
-      },
-			_onNeonAnimationFinish: function() {
-				console.log('animation done!');
-  		}
+      }
 		});
 	})();
 </script>

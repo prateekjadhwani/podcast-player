@@ -4,6 +4,7 @@
 <link rel="import" href="bower_components/iron-icons/av-icons.html" />
 <link rel="import" href="bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
 <link rel="import" href="bower_components/neon-animation/neon-animations.html" >
+<link rel="import" href="bower_components/iron-image/iron-image.html" />
 
 <dom-module id="song-file-display">
 	<style>
@@ -22,14 +23,43 @@
 		}
 		paper-material {
 			opacity: 1;
-			height: 100px !important;
+			height: 100%;
 			width: 	100%;
 			overflow: hidden;
+		}
+		iron-image {
+			width: 100px;
+			height: 100px;
+			margin: 25px;
+		}
+		.details {
+			padding: 25px 0 25px 25px;
+			text-align: right;
+		}
+		h2 {
+			color: var(--light-primary-color);
+			white-space: nowrap;
+			overflow: hidden;
+			margin: 10px 0 0 0;
+		}
+		h5 {
+			color: var(--light-primary-color);
+			white-space: nowrap;
+			overflow: hidden;
+			margin: 0 0 10px 0;
 		}
 	</style>
 	<template>
 		<paper-fab id="playbutton" icon="av:play-arrow" on-click="togglePlay"></paper-fab>
-		<paper-material id="c" elevation="0">
+		<paper-material elevation="0" class="flex horizontal layout">
+			<div class="flex details vertical layout" id="details">
+				<h2 class="flex">{{name}}</h2>
+				<h5 class="flex">Episode - <span>{{episode}}</span></h5>
+			</div>
+			<div>
+				<iron-image id="coverimage" style="width:100px; height:100px;" sizing="contain"
+  src="{{coverart}}"></iron-image>
+			</div>
 		</paper-material>
 	</template>
 </dom-module>
@@ -41,15 +71,43 @@
 				Polymer.NeonSharedElementAnimatableBehavior
 			],
 			properties: {
+				coverart: {
+					type: String,
+					value: '',
+					notify: true
+				},
+				name: {
+					type: String,
+					value: '',
+					notify: true
+				},
+				episode: {
+					type: String,
+					value: '',
+					notify: true
+				},
 				animationConfig: {
 					value: function() {
-						var circles = this.$.playbutton;
 						return {
 							'entry': [{
 								name: 'scale-up-animation',
 								node: this.$.playbutton,
 								timing: {
 									delay: 500
+								}
+							}, {
+								name: 'fade-in-animation',
+								node: this.$.coverimage,
+								timing: {
+									delay: 1000
+								}
+							}, {
+								name: 'slide-from-left-animation',
+								node: this.$.details,
+								transformOrigin: "0 90%",
+								timing: {
+									delay: 1500,
+									duration: 500
 								}
 							}],
 							'exit': [{
