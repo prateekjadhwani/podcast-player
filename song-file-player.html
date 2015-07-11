@@ -1,0 +1,61 @@
+<link rel="import" href="bower_components/paper-material/paper-material.html" />
+<link rel="import" href="bower_components/paper-fab/paper-fab.html" />
+<link rel="import" href="bower_components/iron-icons/iron-icons.html" />
+<link rel="import" href="bower_components/iron-icons/av-icons.html" />
+<link rel="import" href="bower_components/neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="bower_components/neon-animation/animations/hero-animation.html" >
+
+<dom-module id="song-file-player">
+	<style>
+		:host {
+			width: 100%;
+			height: 100%;
+		}
+		paper-material {
+			height: 100%;
+			background: blue;
+		}
+	</style>
+	<template>
+		<paper-material id="container123" elevation="0" on-click="togglePlay">
+		</paper-material>
+	</template>
+</dom-module>
+<script>
+	( function () {
+		Polymer({
+			is: 'song-file-player',
+			behaviors: [
+				Polymer.NeonSharedElementAnimatableBehavior
+			],
+			properties: {
+				sharedElements: {
+					value: function() {
+						return {
+							'hero': this.$.container123
+						}
+					}
+				},
+				animationConfig: {
+					value: function() {
+						return {
+							'entry': [{
+								name: 'hero-animation',
+								id: 'hero',
+								toPage: this
+							}],
+							'exit': [{
+								name: 'hero-animation',
+								id: 'hero',
+								fromPage: this
+							}]
+						}
+					}
+				}
+			},
+			togglePlay: function() {
+				this.fire('pause-click');
+			}
+		});
+	})();
+</script>

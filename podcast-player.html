@@ -3,7 +3,10 @@
 <link rel="import" href="bower_components/iron-icons/iron-icons.html" />
 <link rel="import" href="bower_components/iron-icons/av-icons.html" />
 <link rel="import" href="bower_components/paper-progress/paper-progress.html" />
+<link rel="import" href="bower_components/neon-animation/neon-animated-pages.html" />
+<link rel="import" href="song-file-display.html">
 
+<link rel="import" href="song-file-player.html" />
 <dom-module id="podcast-player">
 	<style>
 		:host {
@@ -12,22 +15,17 @@
 			background-color: var(--dark-primary-color);
 			position: relative;
 		}
-		paper-fab {
-			position: absolute;
-			top: -25px;
-			left: 25px;
-			z-index: 25;
-		}
-		paper-material {
-			opacity: 1;
+		neon-animated-pages {
+			height: 150px;
 		}
 	</style>
 	<template>
-		<paper-fab id="playbutton" disabled icon="av:play-arrow" on-click="togglePlay"></paper-fab>
-		<paper-material id="container" elevation="0">
-		</paper-material>
 		
-		<script type="text/javascript" src="wavesurfer.min.js" onload='document.querySelector("podcast-player").updateWavesurfer();'></script>
+		<neon-animated-pages id="pages" selected="0">
+			<song-file-display on-play-click="goToPlayer"></song-file-display>
+			<song-file-player on-pause-click="goToDisplay"></song-file-player>
+		</neon-animated-pages>
+<!--		<script type="text/javascript" src="wavesurfer.min.js" onload='document.querySelector("podcast-player").updateWavesurfer();'></script>-->
 	</template>
 </dom-module>
 <script>
@@ -57,37 +55,48 @@
 					type: String,
 					value: '#CFD8DC',
 					notify: true
+				},
+				selectedPage :{
+					type: Number,
+					value: 0
 				}
 			},
-			initWaveSurfer: function() {
-				var self = this;
-				this.wavesurfer.init({
-					container: this.$.container,
-//					progressColor: '#f16529',
-//					waveColor: '#e44d26',
-					waveColor: this.wavecolor,
-					progressColor: this.progresscolor, // --primary-background-color
-					fillParent: true,
-					height: 100
-				});
-				this.wavesurfer.on('ready', function () {
-					self.$.playbutton.removeAttribute('disabled');
-				});
-				this.wavesurfer.load(this.src);
-			},
-			updateWavesurfer: function() {
-				this.wavesurfer = Object.create(WaveSurfer);
-				this.initWaveSurfer();
-			},
-			togglePlay: function(e) {
-				this.wavesurfer.playPause();
-				var iconType = this.$.playbutton.getAttribute('icon');
-				if(iconType === 'av:play-arrow') {
-					this.$.playbutton.setAttribute('icon', 'av:pause');
-				} else {
-					this.$.playbutton.setAttribute('icon', 'av:play-arrow');
-				}
-			}
+//			initWaveSurfer: function() {
+//				var self = this;
+//				this.wavesurfer.init({
+//					container: this.$.container,
+////					progressColor: '#f16529',
+////					waveColor: '#e44d26',
+//					waveColor: this.wavecolor,
+//					progressColor: this.progresscolor, // --primary-background-color
+//					fillParent: true,
+//					height: 100
+//				});
+//				this.wavesurfer.on('ready', function () {
+//					self.$.playbutton.removeAttribute('disabled');
+//				});
+//				this.wavesurfer.load(this.src);
+//			},
+//			updateWavesurfer: function() {
+//				this.wavesurfer = Object.create(WaveSurfer);
+//				this.initWaveSurfer();
+//			},
+//			togglePlay: function(e) {
+//				this.selectedPage = 1;
+//				this.wavesurfer.play();
+//				var iconType = this.$.playbutton.getAttribute('icon');
+//				if(iconType === 'av:play-arrow') {
+//					this.$.playbutton.setAttribute('icon', 'av:pause');
+//				} else {
+//					this.$.playbutton.setAttribute('icon', 'av:play-arrow');
+//				}
+//			},
+			goToPlayer : function(event) {
+        this.$.pages.selected = 1;
+      },
+      goToDisplay : function(event) {
+        this.$.pages.selected = 0;
+      }
 		});
 	})();
 </script>
