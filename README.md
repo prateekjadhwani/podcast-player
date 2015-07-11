@@ -18,7 +18,7 @@ Simple use the following HTML tag.
 	coverart="cover_290x290.png"></podcast-player>
 ```
 
-Look in the demo file for more details
+Look in the [demo file](https://github.com/prateekjadhwani/podcast-player/blob/master/demo.html) for more details
 
 
 ## Attributes
