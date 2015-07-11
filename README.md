@@ -2,7 +2,11 @@
 A polymer element for podcast player
 
 ## Installation
-*Steps coming up soon*
+You can install `podcast-player` with the help of bower.
+
+```shell
+bower install podcast-player --save
+```
 
 ## How to use
 
