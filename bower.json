@@ -6,7 +6,7 @@
 		"Andrew Bone <AndrewB05@gmail.com>"
   ],
   "description": "A polymer element for playing poddcast mp3s",
-  "main": "demo.html",
+  "main": "podcast-player.html",
   "keywords": [
     "podcast",
     "player",
@@ -26,5 +26,9 @@
     "paper-elements": "PolymerElements/paper-elements#~1.0.1",
     "iron-elements": "PolymerElements/iron-elements#~1.0.1",
     "neon-elements": "PolymerElements/neon-elements#~1.0.0"
-  }
+  },
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/prateekjadhwani/podcast-player.git"
+	}
 }
