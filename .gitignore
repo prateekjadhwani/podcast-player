@@ -28,6 +28,3 @@ node_modules
 
 # Bower Components
 bower_components
-
-# Copyright Files That should not be promoted
-mirror.mp3
