@@ -1,6 +1,8 @@
 # < podcast-player >
 A polymer element for podcast player
 
+![Screenshot](screenshot.gif)
+
 ## Installation
 You can install `podcast-player` with the help of bower.
 
