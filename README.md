@@ -12,7 +12,7 @@ bower install podcast-player --save
 
 ## How to use
 
-Simple use the following HTML tag.
+Simply use the following HTML tag.
 
 ```HTML
 <podcast-player
