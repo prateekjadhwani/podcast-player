@@ -41,12 +41,14 @@
 			white-space: nowrap;
 			overflow: hidden;
 			margin: 10px 0 0 0;
+			font-weight: 100;
 		}
 		h5 {
 			color: var(--light-primary-color);
 			white-space: nowrap;
 			overflow: hidden;
 			margin: 0 0 10px 0;
+			font-weight: 100;
 		}
 	</style>
 	<template>
@@ -99,21 +101,22 @@
 								name: 'fade-in-animation',
 								node: this.$.coverimage,
 								timing: {
-									delay: 1000
+									delay: 750
 								}
 							}, {
 								name: 'slide-from-left-animation',
 								node: this.$.details,
 								transformOrigin: "0 90%",
 								timing: {
-									delay: 1500,
-									duration: 500
+									delay: 1000,
+									duration: 250
 								}
 							}],
 							'exit': [{
 								name: 'ripple-animation',
 								id: 'ripple',
-								fromPage: this
+								fromPage: this,
+								timing: {duration: 500}
 							},{
 								name: 'scale-down-animation',
   							node: this.$.playbutton,
