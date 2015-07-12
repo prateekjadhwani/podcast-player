@@ -1,9 +1,11 @@
 <link rel="import" href="../paper-material/paper-material.html" />
 <link rel="import" href="../paper-fab/paper-fab.html" />
 <link rel="import" href="../paper-icon-button/paper-icon-button.html" />
+<link rel="import" href="../paper-button/paper-button.html" />
 <link rel="import" href="../iron-icons/iron-icons.html" />
 <link rel="import" href="../iron-icons/av-icons.html" />
 <link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../paper-progress/paper-progress.html" />
 <link rel="import" href="../neon-animation/neon-animated-pages.html" />
 <link rel="import" href="../neon-animation/neon-animations.html" />
 
@@ -13,6 +15,14 @@
 			width: 100%;
 			height: 100%;
 		}
+		paper-progress {
+			position: absolute;
+			top: 1px;
+			width: 100%;
+			z-index: 5;
+			--paper-progress-active-color: var(--text-primary-color);
+			--paper-progress-container-color: transparent;
+		}
 		paper-material#container {
 			height: 100%;
 			background: var(--accent-color);
@@ -21,16 +31,51 @@
 			opacity: 0;
 			transition: opacity 0.5s;
 		}
+		#controls {
+			text-align: center;
+			opacity: 0;
+			transition: opacity 1s;
+		}
+		paper-icon-button::shadow #icon {
+			width: 30px;
+			height: 30px;
+		}
+		paper-icon-button[toggles] {
+      transition: background-color 0.3s;
+    }
+    paper-icon-button[toggles][active] {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+		@media (min-width: 600px) {
+			#container {
+				display: block;
+			}
+			#wavecontainer {
+				opacity: 0;
+				width: 70%;
+				display: inline-block;
+				vertical-align: middle;
+				margin: 25px 0;
+			}
+			#controls {
+				opacity: 0;
+				width: 29%;
+				display: inline-block;
+				vertical-align: middle;
+			}
+		}
 	</style>
 	<template>
+		<paper-progress id="loadmeter" value="{{loadingval}}"></paper-progress>
 		<paper-material id="container" elevation="0">
 			<paper-material id="wavecontainer" elevation="0">
 			</paper-material>
-			<div id="controls">
-				<paper-icon-button id='pausebutton' icon="av:pause" on-click="togglePlay"></paper-icon-button>
+			<div id="controls" class="horizontal layout">
+				<paper-icon-button class="flex" id='replaybutton' icon="av:replay-30" on-click="replay"></paper-icon-button>
+				<paper-icon-button class="flex"  id='pausebutton' icon="av:pause" on-click="togglePlay"></paper-icon-button>
+				<paper-icon-button class="flex"  id='mutebutton' icon="av:volume-off" on-click="mute" toggles></paper-icon-button>
 			</div>
 		</paper-material>
-		
 	</template>
 </dom-module>
 <script>
@@ -59,6 +104,10 @@
 					type: String,
 					value: '#CFD8DC',
 					notify: true
+				},
+				loadingval: {
+					type: String,
+					value: 0
 				},
 				sharedElements: {
 					value: function() {
@@ -93,11 +142,14 @@
 			},
 			togglePlay: function() {
 				this.$.wavecontainer.style.opacity = 0;
+				this.$.controls.style.opacity = 0;
 				this.wavesurfer.pause();
 				this.fire('pause-click');
 			},
 			initWaveSurfer: function() {
 				var self = this;
+				this.$.controls.style.opacity = 0;
+
 				this.wavesurfer.init({
 					container: this.$.wavecontainer,
 					waveColor: this.wavecolor,
@@ -105,16 +157,37 @@
 					fillParent: true,
 					height: 100
 				});
+				
 				this.wavesurfer.on('ready', function () {
 					self.wavesurfer.play();
 				});
 				this.wavesurfer.load(this.src);
+
+				this.wavesurfer.on('finish', function () {
+					self.togglePlay();
+				});
+
+				this.wavesurfer.on('loading', function (e) {
+					self.loadingval = e;
+					if(e == 100) {
+						self.$.controls.style.opacity = 1;
+						self.$.loadmeter.style.display = "none";
+					} else {
+						self.$.controls.style.opacity = 0;
+					}
+				});
 			},
 			updateWavesurfer: function() {
 				this.wavesurfer = Object.create(WaveSurfer);
 			},
 			play: function() {
 				this.wavesurfer.play();
+			},
+			mute: function() {
+				this.wavesurfer.toggleMute();
+			},
+			replay: function() {
+				this.wavesurfer.skip(-30);
 			}
 		});
 	})();
