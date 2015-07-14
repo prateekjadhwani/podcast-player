@@ -14,7 +14,7 @@
 			width: 100%;
 			height: 150px;
 			background-color: var(--dark-primary-color);
-			position: relative;
+			position: absolute;
 			font-family: 'Roboto', sans-serif;
 		}
 		neon-animated-pages {
@@ -26,18 +26,18 @@
 	</style>
 	<template>
 		<neon-animated-pages id="pages" selected="0">
-			<song-file-display 
-												 on-play-click="goToPlayer"
-												 name="{{name}}"
-												 episode="{{episode}}"
-												 coverart="{{coverart}}"></song-file-display>
-			<song-file-player 
-												on-pause-click="goToDisplay" 
-												src="{{src}}"
-												wavecolor="{{wavecolor}}"
-												progresscolor="{{progresscolor}}"></song-file-player>
+			<song-file-display
+				on-play-click="goToPlayer"
+				name="{{name}}"
+				episode="{{episode}}"
+				coverart="{{coverart}}"></song-file-display>
+			<song-file-player
+				on-pause-click="goToDisplay"
+				src="{{src}}"
+				wavecolor="{{wavecolor}}"
+				progresscolor="{{progresscolor}}"></song-file-player>
 		</neon-animated-pages>
-		<script type="text/javascript" src="wavesurfer.min.js" onload='document.querySelector("song-file-player").updateWavesurfer();'></script>
+		<script id="wavesurferscript" type="text/javascript" src="wavesurfer.min.js" ></script>
 	</template>
 </dom-module>
 <script>
@@ -84,22 +84,29 @@
 				},
 				initPlayer: false
 			},
+			listeners: {
+				'wavesurferscript.load': 'updatewavesurfer'
+			},
 			goToPlayer : function(event) {
+				var self = Polymer.dom(this.root).querySelector("song-file-player");
         this.$.pages.selected = 1;
 				if(this.initPlayer) {
-					document.querySelector("song-file-player").play();
+					Polymer.dom(this.root).querySelector("song-file-player").play();
 				} else {
-					document.querySelector("song-file-player").initWaveSurfer();
+					Polymer.dom(this.root).querySelector("song-file-player").initWaveSurfer();
 					this.initPlayer = true;
 				}
 				setTimeout( function() {
-					document.querySelector("#wavecontainer").style.opacity = 1;
-					document.querySelector("#controls").style.opacity = 1;
+					self.querySelector("#wavecontainer").style.opacity = 1;
+					self.querySelector("#controls").style.opacity = 1;
 				}, 1000);
       },
       goToDisplay : function(event) {
         this.$.pages.selected = 0;
-      }
+      },
+			updatewavesurfer: function(e) {
+				Polymer.dom(this.root).querySelector("song-file-player").updateWavesurfer();
+			}
 		});
 	})();
 </script>
