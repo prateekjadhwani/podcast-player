@@ -14,7 +14,10 @@
 			}
 
 			/* position and size of player */
-			podcast-player {
+			#somewhere {
+				top: 50px;
+			}
+			#bottom {
 				position: fixed;
 				bottom: 0px;
 				width: 100%;
@@ -22,12 +25,22 @@
 		</style>
 	</head>
 	<body>
-		<podcast-player 
-										wavecolor="#ffffff" 
-										progresscolor="#CFD8DC" 
-										src="Baseball_Project_-_10_-_Interview.mp3"
-										name="Interview (by The Baseball Project)"
-										episode="10"
-										coverart="cover_290x290.jpg"></podcast-player>
+
+		<podcast-player id="somewhere"
+			wavecolor="#ffffff" 
+			progresscolor="#CFD8DC" 
+			src="Baseball_Project_-_10_-_Interview.mp3"
+			name="Interview (by The Baseball Project)"
+			episode="10"
+			coverart="cover_290x290.jpg"></podcast-player>
+
+		<podcast-player id="bottom"
+			wavecolor="#ffffff" 
+			progresscolor="#CFD8DC" 
+			src="Baseball_Project_-_10_-_Interview.mp3"
+			name="Interview (by The Baseball Project)"
+			episode="10"
+			coverart="cover_290x290.jpg"></podcast-player>
+
 	</body>
 </html>
