@@ -11,7 +11,8 @@
     "podcast",
     "player",
     "polymer",
-    "element"
+    "element",
+		"web-components"
   ],
   "license": "MIT",
   "homepage": "https://github.com/prateekjadhwani/podcast-player",
