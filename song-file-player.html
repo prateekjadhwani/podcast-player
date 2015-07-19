@@ -153,7 +153,7 @@
 				this.wavesurfer.init({
 					container: this.$.wavecontainer,
 					waveColor: this.wavecolor,
-					progressColor: this.progresscolor, // --primary-background-color
+					progressColor: this.progresscolor,
 					fillParent: true,
 					height: 100
 				});
@@ -170,7 +170,9 @@
 				this.wavesurfer.on('loading', function (e) {
 					self.loadingval = e;
 					if(e == 100) {
-						self.$.controls.style.opacity = 1;
+						setTimeout( function () {
+							self.$.controls.style.opacity = 1;
+						}, 1000);
 						self.$.loadmeter.style.display = "none";
 					} else {
 						self.$.controls.style.opacity = 0;

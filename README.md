@@ -16,12 +16,12 @@ Simply use the following HTML tag.
 
 ```HTML
 <podcast-player
-	wavecolor="#ffffff"
-	progresscolor="#CFD8DC"
-	src="Project_5am_-_01_-_June_8th_-There_is_another_waycourage.mp3"
-	name="June 8th -There is another way...(courage)"
-	episode="12"
-	coverart="cover_290x290.png"></podcast-player>
+  wavecolor="#ffffff"
+  progresscolor="#CFD8DC"
+  src="Project_5am_-_01_-_June_8th_-There_is_another_waycourage.mp3"
+  name="June 8th -There is another way...(courage)"
+  episode="12"
+  coverart="cover_290x290.png"></podcast-player>
 ```
 
 Look in the [demo file](https://github.com/prateekjadhwani/podcast-player/blob/master/demo.html) for more details
@@ -37,7 +37,11 @@ Look in the [demo file](https://github.com/prateekjadhwani/podcast-player/blob/m
 | episode | The episode number of the file | String | `12` or `June 8th - 01` |
 | coverart | Link to the cover art image | String | `cover_290x290.png` |
 
+### Performance related information
+
+- Using large `.mp3` files may cause the wavesurfer library to take large time to parse the file into waveform. Our suggestion would be to use `.wav` files that are under 2-3 MBs.
 
 ### Credits
-- Music used for the demo - [The Free Music Archive](http://freemusicarchive.org/)
+
+- Music used for the demo - [WAV-SOUNDS](http://www.wav-sounds.com/)
 - Wave form visualizer - [wavesurfer.js](http://www.wavesurfer.fm/)
