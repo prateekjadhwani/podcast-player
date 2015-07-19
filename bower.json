@@ -1,6 +1,6 @@
 {
   "name": "podcast-player",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "authors": [
     "Prateek Jadhwani <prateekjadhwani@users.noreply.github.com>",
 		"Andrew Bone <AndrewB05@gmail.com>"
@@ -8,11 +8,11 @@
   "description": "A polymer element for playing poddcast mp3s",
   "main": "podcast-player.html",
   "keywords": [
+    "web-components",
     "podcast",
     "player",
     "polymer",
-    "element",
-		"web-components"
+    "element"
   ],
   "license": "MIT",
   "homepage": "https://github.com/prateekjadhwani/podcast-player",
