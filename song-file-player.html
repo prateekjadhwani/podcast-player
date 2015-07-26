@@ -74,11 +74,13 @@
 		}
 		#notification {
 			position: absolute;
-			top: 40px;
-			left: 10px;
+			width: 100%;
+			height: 2px;
+			top: 50px;
+			margin: 0;
+			left: 0px;
 			vertical-align: middle;
-			margin: 25px 0;
-			color: var(--text-primary-color);
+			border-top: 2px solid var(--text-primary-color);
 			-webkit-animation: flickerAnimation 3s infinite;
 			-moz-animation: flickerAnimation 3s infinite;
 			-o-animation: flickerAnimation 3s infinite;
@@ -106,8 +108,8 @@
 	<template>
 		<paper-progress id="loadmeter" value="{{loadingval}}"></paper-progress>
 		<paper-material id="container" elevation="0">
-			<p id="notification">Woah, Thats a big file. Processing...</p>
 			<paper-material id="wavecontainer" elevation="0">
+				<p id="notification"></p>
 			</paper-material>
 			<div id="controls" class="horizontal layout">
 				<paper-icon-button class="flex" id='replaybutton' icon="av:replay-30" on-tap="replay"></paper-icon-button>
@@ -202,14 +204,20 @@
 					waveColor: this.wavecolor,
 					progressColor: this.progresscolor,
 					fillParent: true,
-					height: 100
+					height: 100,
+					backend: 'AudioElement'
 				});
 				this.isInitialized = true;
 
 				this.wavesurfer.on('ready', function () {
 					self.wavesurfer.play();
+					self.$.notification.style.borderColor = self.wavecolor;
+					setTimeout( function () {
+						self.$.controls.style.opacity = 1;
+					}, 1000);
+					self.$.loadmeter.style.display = "none";
 				});
-				
+
 				this.wavesurfer.on('error', function(e) {
 					setTimeout( function () {
 						self.$.error.show();
@@ -221,15 +229,11 @@
 						self.fire('error');
 					}, 5000);
 				});
-				
+
 				this.wavesurfer.load(this.src);
 
 				this.wavesurfer.on('finish', function () {
 					self.togglePlay();
-				});
-				
-				this.wavesurfer.on('ready', function () {
-					self.$.notification.style.display = "none";
 				});
 
 				this.wavesurfer.on('loading', function (e) {
@@ -239,8 +243,6 @@
 							self.$.controls.style.opacity = 1;
 						}, 1000);
 						self.$.loadmeter.style.display = "none";
-					} else {
-						self.$.controls.style.opacity = 0;
 					}
 				});
 			},
