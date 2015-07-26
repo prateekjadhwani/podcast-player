@@ -8,6 +8,7 @@
 <link rel="import" href="../paper-progress/paper-progress.html" />
 <link rel="import" href="../neon-animation/neon-animated-pages.html" />
 <link rel="import" href="../neon-animation/neon-animations.html" />
+<link rel="import" href="../paper-toast/paper-toast.html" />
 
 <dom-module id="song-file-player">
 	<style>
@@ -46,6 +47,43 @@
     paper-icon-button[toggles][active] {
       background-color: rgba(0, 0, 0, 0.25);
     }
+
+		#error {
+			z-index: 999;
+		}
+		
+		@keyframes flickerAnimation {
+			0%   { opacity:1; }
+			50%  { opacity:0; }
+			100% { opacity:1; }
+		}
+		@-o-keyframes flickerAnimation{
+			0%   { opacity:1; }
+			50%  { opacity:0; }
+			100% { opacity:1; }
+		}
+		@-moz-keyframes flickerAnimation{
+			0%   { opacity:1; }
+			50%  { opacity:0; }
+			100% { opacity:1; }
+		}
+		@-webkit-keyframes flickerAnimation{
+			0%   { opacity:1; }
+			50%  { opacity:0; }
+			100% { opacity:1; }
+		}
+		#notification {
+			position: absolute;
+			top: 40px;
+			left: 10px;
+			vertical-align: middle;
+			margin: 25px 0;
+			color: var(--text-primary-color);
+			-webkit-animation: flickerAnimation 3s infinite;
+			-moz-animation: flickerAnimation 3s infinite;
+			-o-animation: flickerAnimation 3s infinite;
+			animation: flickerAnimation 3s infinite;
+		}
 		@media (min-width: 600px) {
 			#container {
 				display: block;
@@ -68,6 +106,7 @@
 	<template>
 		<paper-progress id="loadmeter" value="{{loadingval}}"></paper-progress>
 		<paper-material id="container" elevation="0">
+			<p id="notification">Woah, Thats a big file. Processing...</p>
 			<paper-material id="wavecontainer" elevation="0">
 			</paper-material>
 			<div id="controls" class="horizontal layout">
@@ -76,6 +115,7 @@
 				<paper-icon-button class="flex"  id='mutebutton' icon="av:volume-off" on-tap="mute" toggles></paper-icon-button>
 			</div>
 		</paper-material>
+		<paper-toast id="error" duration="3000" text="An error occured while downloading the file"></paper-toast>
 	</template>
 </dom-module>
 <script>
@@ -109,6 +149,10 @@
 					type: String,
 					value: 0
 				},
+				isInitialized: {
+					type: Boolean,
+					value: false
+				},
 				sharedElements: {
 					value: function() {
 						return {
@@ -141,9 +185,12 @@
 				}
 			},
 			togglePlay: function() {
+				this.pause();
+				this.handlePause();
+			},
+			handlePause: function() {
 				this.$.wavecontainer.style.opacity = 0;
 				this.$.controls.style.opacity = 0;
-				this.wavesurfer.pause();
 				this.fire('pause-click');
 			},
 			initWaveSurfer: function() {
@@ -157,14 +204,32 @@
 					fillParent: true,
 					height: 100
 				});
+				this.isInitialized = true;
 
 				this.wavesurfer.on('ready', function () {
 					self.wavesurfer.play();
 				});
+				
+				this.wavesurfer.on('error', function(e) {
+					setTimeout( function () {
+						self.$.error.show();
+					}, 2000);
+					setTimeout( function () {
+						self.wavesurfer.destroy();
+						self.isInitialized = false;
+						self.togglePlay();
+						self.fire('error');
+					}, 5000);
+				});
+				
 				this.wavesurfer.load(this.src);
 
 				this.wavesurfer.on('finish', function () {
 					self.togglePlay();
+				});
+				
+				this.wavesurfer.on('ready', function () {
+					self.$.notification.style.display = "none";
 				});
 
 				this.wavesurfer.on('loading', function (e) {
@@ -185,11 +250,23 @@
 			play: function() {
 				this.wavesurfer.play();
 			},
+			pause: function() {
+				this.wavesurfer.pause();
+			},
 			mute: function() {
 				this.wavesurfer.toggleMute();
 			},
 			replay: function() {
 				this.wavesurfer.skip(-30);
+			},
+			freeUpMemory: function(){
+				if(this.isInitialized && this.wavesurfer.isPlaying != "undefined") {
+					this.wavesurfer.pause();
+					this.wavesurfer.destroy();
+					this.isInitialized = false;
+					this.fire("error");
+					this.handlePause();
+				}
 			}
 		});
 	})();
