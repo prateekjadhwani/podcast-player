@@ -155,6 +155,10 @@
 					type: Boolean,
 					value: false
 				},
+				datapoints: {
+					type: Array,
+					value: []
+				},
 				sharedElements: {
 					value: function() {
 						return {
@@ -223,14 +227,16 @@
 						self.$.error.show();
 					}, 2000);
 					setTimeout( function () {
-						self.wavesurfer.destroy();
-						self.isInitialized = false;
 						self.togglePlay();
 						self.fire('error');
 					}, 5000);
 				});
 
-				this.wavesurfer.load(this.src);
+				if(this.datapoints.length == 0) {
+					this.wavesurfer.load(this.src);
+				} else {
+					this.wavesurfer.load(this.src, this.datapoints);
+				}
 
 				this.wavesurfer.on('finish', function () {
 					self.togglePlay();

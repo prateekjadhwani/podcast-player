@@ -32,7 +32,8 @@
 				on-error="handlePlayerError"
 				src="{{src}}"
 				wavecolor="{{wavecolor}}"
-				progresscolor="{{progresscolor}}"></song-file-player>
+				progresscolor="{{progresscolor}}"
+				datapoints="{{datapoints}}"></song-file-player>
 		</neon-animated-pages>
 		<script id="wavesurferscript" type="text/javascript" src="wavesurfer.min.js" ></script>
 	</template>
@@ -79,6 +80,10 @@
 					type: Number,
 					value: 0
 				},
+				datapoints: {
+					type: Array,
+					value: []
+				},
 				initPlayer: false
 			},
 			listeners: {
@@ -90,7 +95,6 @@
 				if(this.initPlayer) {
 					Polymer.dom(this.root).querySelector("song-file-player").play();
 				} else {
-					this.freeOtherPlayerMemory();
 					Polymer.dom(this.root).querySelector("song-file-player").initWaveSurfer();
 					this.initPlayer = true;
 				}
@@ -107,17 +111,6 @@
 			},
 			handlePlayerError: function(e) {
 				this.initPlayer = false;
-			},
-			freeUpMemory: function() {
-				Polymer.dom(this.root).querySelector("song-file-player").freeUpMemory();
-			},
-			freeOtherPlayerMemory : function() {
-				var otherPlayers = document.querySelectorAll("podcast-player");
-				for(i = 0 ; i < otherPlayers.length; i++) {
-					if(otherPlayers[i].initPlayer) {
-						otherPlayers[i].freeUpMemory();
-					}
-				};
 			}
 		});
 	})();
