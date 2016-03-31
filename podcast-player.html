@@ -1,6 +1,5 @@
 <link rel="import" href="../polymer/polymer.html" />
-<link rel="import" href="../neon-animation/neon-animated-pages.html" />
-
+<link rel="import" href = "../neon-animation/neon-animated-pages.html" / >
 <link rel="import" href="song-file-display.html">
 <link rel="import" href="song-file-player.html" />
 
@@ -90,24 +89,16 @@
 				'wavesurferscript.load': 'updatewavesurfer'
 			},
 			goToPlayer : function(event) {
-				var self = Polymer.dom(this.root).querySelector("song-file-player");
-        this.$.pages.selected = 1;
-				if(this.initPlayer) {
-					Polymer.dom(this.root).querySelector("song-file-player").play();
-				} else {
-					Polymer.dom(this.root).querySelector("song-file-player").initWaveSurfer();
-					this.initPlayer = true;
-				}
-				setTimeout( function() {
-					self.querySelector("#wavecontainer").style.opacity = 1;
-					self.querySelector("#controls").style.opacity = 1;
-				}, 1000);
-      },
-      goToDisplay : function(event) {
-        this.$.pages.selected = 0;
-      },
+				this.$.pages.selected = 1;
+				Polymer.dom(this.root)
+					.querySelector("song-file-player").play();
+			},
+			goToDisplay : function(event) {
+				this.$.pages.selected = 0;
+			},
 			updatewavesurfer: function(e) {
-				Polymer.dom(this.root).querySelector("song-file-player").updateWavesurfer();
+				Polymer.dom(this.root)
+					.querySelector("song-file-player").updateWavesurfer();
 			},
 			handlePlayerError: function(e) {
 				this.initPlayer = false;

@@ -42,16 +42,16 @@
 			height: 30px;
 		}
 		paper-icon-button[toggles] {
-      transition: background-color 0.3s;
-    }
-    paper-icon-button[toggles][active] {
-      background-color: rgba(0, 0, 0, 0.25);
-    }
+			transition: background-color 0.3s;
+		}
+		paper-icon-button[toggles][active] {
+			background-color: rgba(0, 0, 0, 0.25);
+		}
 
 		#error {
 			z-index: 999;
 		}
-		
+
 		@keyframes flickerAnimation {
 			0%   { opacity:1; }
 			50%  { opacity:0; }
@@ -82,9 +82,9 @@
 			vertical-align: middle;
 			border-top: 2px solid var(--text-primary-color);
 			-webkit-animation: flickerAnimation 3s infinite;
-			-moz-animation: flickerAnimation 3s infinite;
-			-o-animation: flickerAnimation 3s infinite;
-			animation: flickerAnimation 3s infinite;
+			-moz-animation:    flickerAnimation 3s infinite;
+			-o-animation:      flickerAnimation 3s infinite;
+			animation:         flickerAnimation 3s infinite;
 		}
 		@media (min-width: 600px) {
 			#container {
@@ -174,7 +174,7 @@
 							'entry': [{
 								name: 'ripple-animation',
 								id: 'ripple',
-              	toPage: this,
+								toPage: this,
 								timing: {
 									duration: 500
 								}
@@ -199,64 +199,89 @@
 				this.$.controls.style.opacity = 0;
 				this.fire('pause-click');
 			},
+			bindWaveSurferEvents: function() {
+				return new Promise((resolve, reject) => {
+					this.wavesurfer.on('ready', () => {
+						this.wavesurfer.play();
+						this.$.notification.style.borderColor = this.wavecolor;
+						this.showControls();
+					});
+
+					this.wavesurfer.on('error', (e) => {
+						setTimeout( () => {
+							this.$.error.show();
+						}, 2000);
+						setTimeout( () => {
+							this.togglePlay();
+							this.fire('error');
+						}, 5000);
+					});
+
+					this.wavesurfer.on('finish', () => {
+						this.togglePlay();
+					});
+
+					this.wavesurfer.on('loading', (e) => {
+						this.loadingval = e;
+						if(e == 100) {
+							this.showControls();
+						}
+					});
+
+					resolve();
+				});
+			},
+			showControls: function() {
+				// We need a setTimeout here because the animation applies on
+				// inner elements as well, which makes it look weird
+				setTimeout( () => {
+					this.$.controls.style.opacity = 1;
+					this.$.wavecontainer.style.opacity = 1;
+				}, 1000);
+				this.$.loadmeter.style.display = "none";
+			},
 			initWaveSurfer: function() {
-				var self = this;
 				this.$.controls.style.opacity = 0;
 
-				this.wavesurfer.init({
-					container: this.$.wavecontainer,
-					waveColor: this.wavecolor,
-					progressColor: this.progresscolor,
-					fillParent: true,
-					height: 100,
-					backend: 'AudioElement'
-				});
-				this.isInitialized = true;
+				return new Promise((resolve, reject)=> {
+					this.wavesurfer.init({
+						container: this.$.wavecontainer,
+						waveColor: this.wavecolor,
+						progressColor: this.progresscolor,
+						fillParent: true,
+						height: 100,
+						backend: 'AudioElement'
+					});
 
-				this.wavesurfer.on('ready', function () {
-					self.wavesurfer.play();
-					self.$.notification.style.borderColor = self.wavecolor;
-					setTimeout( function () {
-						self.$.controls.style.opacity = 1;
-					}, 1000);
-					self.$.loadmeter.style.display = "none";
-				});
-
-				this.wavesurfer.on('error', function(e) {
-					setTimeout( function () {
-						self.$.error.show();
-					}, 2000);
-					setTimeout( function () {
-						self.togglePlay();
-						self.fire('error');
-					}, 5000);
-				});
-
-				if(this.datapoints.length == 0) {
-					this.wavesurfer.load(this.src);
-				} else {
-					this.wavesurfer.load(this.src, this.datapoints);
-				}
-
-				this.wavesurfer.on('finish', function () {
-					self.togglePlay();
-				});
-
-				this.wavesurfer.on('loading', function (e) {
-					self.loadingval = e;
-					if(e == 100) {
-						setTimeout( function () {
-							self.$.controls.style.opacity = 1;
-						}, 1000);
-						self.$.loadmeter.style.display = "none";
-					}
+					this.isInitialized = true;
+					resolve();
 				});
 			},
 			updateWavesurfer: function() {
 				this.wavesurfer = Object.create(WaveSurfer);
 			},
 			play: function() {
+
+				// If player is not initialized
+				// i.e. if it is the first run
+				// then call the initialization script
+				if(!this.isInitialized) {
+					this.initWaveSurfer()
+					.then(() => {
+						return this.bindWaveSurferEvents();
+					})
+					.then(() => {
+						if(this.datapoints.length == 0) {
+							this.wavesurfer.load(this.src);
+						} else {
+							this.wavesurfer.load(this.src, this.datapoints);
+						}
+					});
+					return;
+				}
+
 				this.wavesurfer.play();
+				this.showControls();
 			},
 			pause: function() {
 				this.wavesurfer.pause();
@@ -266,15 +291,6 @@
 			},
 			replay: function() {
 				this.wavesurfer.skip(-30);
-			},
-			freeUpMemory: function(){
-				if(this.isInitialized && this.wavesurfer.isPlaying != "undefined") {
-					this.wavesurfer.pause();
-					this.wavesurfer.destroy();
-					this.isInitialized = false;
-					this.fire("error");
-					this.handlePause();
-				}
 			}
 		});
 	})();

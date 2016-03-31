@@ -26,6 +26,7 @@
 			height: 100%;
 			width: 	100%;
 			overflow: hidden;
+			@apply(--layout-horizontal);
 		}
 		iron-image {
 			width: 100px;
@@ -33,6 +34,8 @@
 			margin: 25px;
 		}
 		.details {
+			@apply(--layout-flex);
+			@apply(--layout-vertical);
 			padding: 25px 0 25px 25px;
 			text-align: right;
 		}
@@ -43,6 +46,7 @@
 			margin: 10px 0 0 0;
 			font-weight: 100;
 			text-overflow: ellipsis;
+			@apply(--layout-flex);
 		}
 		h5 {
 			color: var(--light-primary-color);
@@ -51,14 +55,15 @@
 			margin: 0 0 10px 0;
 			font-weight: 100;
 			text-overflow: ellipsis;
+			@apply(--layout-flex);
 		}
 	</style>
 	<template>
 		<paper-fab id="playbutton" icon="av:play-arrow" on-tap="togglePlay"></paper-fab>
-		<paper-material elevation="0" class="flex horizontal layout">
-			<div class="flex details vertical layout" id="details">
-				<h2 class="flex">{{name}}</h2>
-				<h5 class="flex">Episode - <span>{{episode}}</span></h5>
+		<paper-material elevation="0">
+			<div class="details" id="details">
+				<h2>{{name}}</h2>
+				<h5>Episode - <span>{{episode}}</span></h5>
 			</div>
 			<div>
 				<iron-image id="coverimage" style="width:100px; height:100px;" sizing="contain"
@@ -121,7 +126,7 @@
 								timing: {duration: 500}
 							},{
 								name: 'scale-down-animation',
-  							node: this.$.playbutton,
+								node: this.$.playbutton,
 								timing: {
 									delay: 500
 								}
